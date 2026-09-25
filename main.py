@@ -11,22 +11,21 @@ tim.penup()
 tim.hideturtle()
 
 score = 0
-game_on = 1
+df = pandas.read_csv("50_states.csv")
 
-while game_on:
+while score < 50:
     answer_state = screen.textinput(title=f"{score}/50 States Correct", prompt="What's another state name?").title()
 
-    print(answer_state)
+    if answer_state == "Exit":
+        break
 
-    df = pandas.read_csv("50_states.csv")
     if answer_state in df.values:
         print("You guessed correct")
-        x_cor = df[df.state == answer_state].x.to_list()[0]
-        y_cor = df[df.state == answer_state].y.to_list()[0]
+        x_cor = df[df.state == answer_state].x.item()
+        y_cor = df[df.state == answer_state].y.item()
         tim.goto(x_cor,y_cor)
         tim.write(answer_state)
         score += 1
-        df.drop(df[df.state == answer_state].index)
+        df = df.drop(df[df.state == answer_state].index)
 
-
-screen.mainloop()
+df.to_csv("states_missed")
